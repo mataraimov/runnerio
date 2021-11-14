@@ -114,10 +114,10 @@ public class Game extends Application {
         playButton.setOnMouseExited(mouseEvent -> playButton.setImage(assets[0]));
         playButton.setOnMouseClicked(mouseEvent -> {
             stage.setScene(gameScene);
-
         });
         timeline.play();
     }
+
 
     void uploadFiles(String currentpath,ArrayList<Image>images_list){
         File file = new File(String.format("C:/Users/Администратор/IdeaProjects/runnerio/src/Images/%s",currentpath));
