@@ -1,10 +1,10 @@
 __Runner.io__  <br />
 <br />
-<img align="center"  width="550px" src="https://github.com/itsabdiev/Music-PLayer/blob/main/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20(2).png" />  <br />
+<img align="center"  width="550px" src="https://github.com/itsabdiev/runnerio/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20(1).png" />  <br />
     <br />
    
    
-<img align="center" alt="Java " width="550px" src="https://github.com/itsabdiev/Music-PLayer/blob/main/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20(4).png" />  <br />
+<img align="center" alt="Java " width="550px" src="https://github.com/itsabdiev/runnerio/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20(2).png" />  <br />
     <br />    
     
     
@@ -27,6 +27,7 @@ __Runner.io__  <br />
 3. :framed_picture: Before running,please change some pathes to images and files
 4. :arrow_forward: Run
 5. :sunglasses: Enjoy
+6. But also you can dowload .jar file from here and also run it
 <!--END_SECTION:activity-->
 
 </details>
