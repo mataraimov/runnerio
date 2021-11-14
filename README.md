@@ -1,4 +1,4 @@
-__MP3 PLayer 🔊__  <br />
+__Runner.io__  <br />
 <br />
 <img align="center"  width="550px" src="https://github.com/itsabdiev/Music-PLayer/blob/main/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20(2).png" />  <br />
     <br />
@@ -9,227 +9,288 @@ __MP3 PLayer 🔊__  <br />
     
     
 ---
-### Watch me on Youtube 📺:
-[<img align="left" alt="Youtube" width="36px" src="https://i.pinimg.com/originals/19/7b/36/197b365922d1ea3aa1a932ff9bbda4a6.png" />][youtube]  <br />
-### Languages and Tools:
+### Tools:
 [<img align="left" alt="Java " width="36px" src="https://img.icons8.com/ios/452/domain.png" />][website]
 [<img align="left" alt="Java " width="36px" src="https://pbs.twimg.com/profile_images/1206618215767584769/zl48EuhC.jpg" />][Intellij]
-[<img align="left" alt="Java " width="36px" src="https://icon-library.com/images/java-icon-png/java-icon-png-2.jpg" />][Java]
-[<img align="left" alt="Scene Builder " width="36px" src="https://gluonhq.com/wp-content/uploads/2015/02/SceneBuilderLogo-300x300@2x.png" />][SceneBuilder]  <br /> 
+[<img align="left" alt="Java " width="36px" src="https://icon-library.com/images/java-icon-png/java-icon-png-2.jpg" />][Java] <br /> 
 
 <br />
 
 
    <details>
-  <summary>:zap: Process</summary>
+  <summary>:video_game: How to Run</summary>
   
  
 <!--START_SECTION:activity-->
-1. 🎨 Working on design of mp3 player
-2. 🧩 Creating structure of code
-3. 💾 Using mp3 libraries
-4. 🎧 End of work
-5. 😎 Enjoy
+1. :bookmark_tabs: I want you inform you that this project is built in Java SDK 17 and must be runned the same(Java Development Kit 17) 
+2. :cloud: Download this project fully and extract to Idea Projects and find Main.java file
+3. :framed_picture: Before running,please change some pathes to images and files
+4. :arrow_forward: Run
+5. :sunglasses: Enjoy
 <!--END_SECTION:activity-->
 
 </details>
 
 ---
 
-* Controller.java
+* Game.java
 ```java
-package sample;
+package com.example.runnerio;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-
-import javafx.scene.control.*;
-
-
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.File;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
 
-import java.util.*;
+public class Game extends Application {
+    Runner runner;
+    Monster monster;
+    Timeline jumpline;
+    int currentFrameRunner = 0;
+    int currentFrameMonster = 0;
+    int thresh = 50;
+    int sceneWidth = 700;
+    int sceneHeight = 230;
+    ArrayList<Image> images_list_runner = new ArrayList<>();
+    ArrayList<Image> images_list_monster = new ArrayList<>();
+    Image [] assets = {new Image("file:///C:/Users/Администратор/IdeaProjects/runnerio/src/Images/Buttons/playInit.png",50,50,false,false),
+           new Image("file:///C:/Users/Администратор/IdeaProjects/runnerio/src/Images/Buttons/playPressed.png",50,50,false,false),
+            new Image("file:///C:/Users/Администратор/IdeaProjects/runnerio/src/Images/Bg/MenuBack.png",sceneWidth,sceneHeight,false,false)};
+    Image bg = new Image("file:///C:/Users/Администратор/IdeaProjects/runnerio/src/Images/Bg/GameBack.png");
+    ImageView bgView;
+    ImageView bgView2;
+    int initialX = 0;
+    int initialY = sceneHeight - 100;
+    int speedOfRunner = 6;
+    int speedOfMonster = 8;
+    int score = 0;
+    int jump_vel = 15;
 
-public class Controller implements Initializable {
 
-
-    @FXML
-    private Label songlabel;
-    @FXML
-    private Button playButton,pauseButton,resetButton,previousButton,nextButton;
-    @FXML
-    private ComboBox<String> speedbox;
-    @FXML
-    private Slider volumeSlider;
-    @FXML
-    private ProgressBar songProgressBar;
-    private Media media;
-    private MediaPlayer mediaPlayer;
-
-    private File directory;
-    private File[] files;
-    private ArrayList<File> songs;
-    private int songNumber;
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        songs = new ArrayList<File>();
-        directory = new File("music");
-        files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                songs.add(file);
+    public void start(Stage stage) {
+        //game
+        Group gameRoot = new Group();
+        Scene gameScene = new Scene(gameRoot);
+        //menu
+        Group menuRoot = new Group();
+        Scene menuScene = new Scene(menuRoot);
+        ImageView playButton = new ImageView(assets[0]);
+        ImageView promo = new ImageView(assets[2]);
+        playButton.setX(300);
+        playButton.setY(80);
+        Label label = new Label();
+        label.setTextFill(Color.rgb(120, 128, 128));
+        label.setFont(Font.loadFont("file:///C:\\Users\\Администратор\\IdeaProjects\\runnerio\\src\\Images\\Bebas-Regular.ttf", 20));
+        label.setLayoutX(5);
+        menuRoot.getChildren().addAll(promo, playButton);
+        jumpline = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> {
+            runner.imageView.setY(runner.imageView.getY() - jump_vel);
+            jump_vel -= 3;
+            if (jump_vel < (-15)) {
+                jump_vel = 15;
+            }}));
+        jumpline.setCycleCount(11);
+        bgView = new ImageView(bg);
+        bgView2 = new ImageView(bg);
+        bgView2.setX(bgView.getImage().getWidth());
+        stage.setResizable(false);
+        stage.setWidth(sceneWidth);
+        stage.setHeight(sceneHeight);
+        stage.getIcons().add(new Image("file:///C:\\Users\\Администратор\\IdeaProjects\\runnerio\\src\\Images\\Icon\\Icon.png"));
+        uploadFiles("Run", images_list_runner);
+        uploadFiles("Monster", images_list_monster);
+        runner = new Runner(initialX, initialY, images_list_runner.get(0));
+        monster = new Monster(660, 150, images_list_monster.get(3));
+        gameRoot.getChildren().addAll(bgView, bgView2, label);
+        runner.drawRunner(gameRoot);
+        monster.drawMonster(gameRoot);
+        stage.setScene(gameScene);
+        stage.setTitle("Runner - Adam Mcavoy");
+        stage.show();
+        //Loop
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> {
+            score += 1;
+            label.setText(String.format("Score: %d", score));
+            currentFrameRunner = currentFrameRunner + 1;
+            if (currentFrameRunner >= images_list_runner.size() - 1) {
+                currentFrameRunner = 0;
+            }
+            runner.frameChange(images_list_runner.get(currentFrameRunner));
+            currentFrameMonster = currentFrameMonster + 1;
+            if (currentFrameMonster >= images_list_monster.size() - 1) {
+                currentFrameMonster = 0;
+            }
+            monster.frameChange(images_list_monster.get(currentFrameMonster));
 
+            bgScrolling();
+            runner.running(speedOfRunner);
+            monster.running(speedOfMonster);
+            monster.checkPos();
+            if (Math.abs(rastoyanie()) <= 40 ) {
+                jump();
             }
 
-        }
-        media =  new Media(songs.get(songNumber).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
-            }
+
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        //functions
+        playButton.setOnMouseEntered(mouseEvent -> playButton.setImage(assets[1]));
+        playButton.setOnMouseExited(mouseEvent -> playButton.setImage(assets[0]));
+        playButton.setOnMouseClicked(mouseEvent -> {
+            stage.setScene(gameScene);
         });
+        timeline.play();
     }
-    public void playMedia() {
-        mediaPlayer.play();
-    }
-    public void pauseMedia() {
-        mediaPlayer.stop();
 
-    }
-    public void resetMedia() {
-        mediaPlayer.seek(Duration.seconds(0));
-    }
-    public void previousMedia() {
-        if(songNumber > 0) {
-            songNumber--;
-            mediaPlayer.stop();
 
-            media =  new Media(songs.get(songNumber).toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play();
-
-        }else {
-            songNumber = songs.size() -  1;
-            mediaPlayer.stop();
-
-            media =  new Media(songs.get(songNumber).toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play();
+    void uploadFiles(String currentpath,ArrayList<Image>images_list){
+        File file = new File(String.format("C:/Users/Администратор/IdeaProjects/runnerio/src/Images/%s",currentpath));
+        images_list.clear();
+        for (File listFile : Objects.requireNonNull(file.listFiles())) {
+            images_list.add(new Image("file:///" + listFile.toString()));
         }
     }
-    public void nextMedia() {
-        if(songNumber < songs.size() - 1) {
-            songNumber++;
 
-        }else {
-            songNumber = 0;
-
+    void bgScrolling(){
+        if (runner.imageView.getX() > thresh ) {
+            bgView.setX(bgView.getX() - 10);
+            bgView2.setX(bgView2.getX() - 10);
+            speedOfRunner = 0;
         }
-        mediaPlayer.stop();
-        media =  new Media(songs.get(songNumber).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
+        else {
+            bgView.setX(bgView.getX() - 0);
+            speedOfRunner = 6;
+        }
+        if (bgView.getX() <= -(bgView2.getImage().getWidth())) {
+            bgView.setX(bgView2.getImage().getWidth());
+        }
+        if (bgView2.getX() <= -(bgView.getImage().getWidth())) {
+            bgView2.setX(bgView.getImage().getWidth());
+        }
     }
+    void jump () {
+        if (runner.imageView.getY() == initialY) {
+            jumpline.play();
+        }
+    }
+    double rastoyanie(){
 
+        return (runner.imageView.getX() + runner.imageView.getImage().getWidth())-(monster.imageView.getX() + monster.imageView.getImage().getWidth());
+
+
+    }
+    public static void main(String[] args) {
+        launch();
+    }
 }
 ```  
 * Main.java
 ```java
-package sample;
+package com.example.runnerio;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-
-
-
-public class Main extends Application {
-
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("");
-        primaryStage.setScene(new Scene(root, 406, 108));
-        primaryStage.show();
-        primaryStage.setTitle("◢◤");
-        System.out.println("Ala-Too International University (AMU) was established in 1996, which is located in the city of Bishkek, Kyrgyz Republic.\n" +
-                "      AMU is a legal entity that carries out its activities in accordance with the legislation of the Kyrgyz Republic.\n" +
-                "     The governing bodies of the university are:\n" +
-                "- the supreme body - the Founder;\n" +
-                "- executive body - Rector - Sanzharbek Erdolatov;\n" +
-                "- collegial body - the academic council of the university.\n" +
-                "      Our university consists of five blocks with classrooms and laboratories equipped with the Internet and modern interactive whiteboards. Our “Gorodok” is an educational conference center with a library, 3 stadiums, 1 tennis court, 1 gym, 6 computer labs, 1 internet club, 1 research center, 2 cantinas, 1 medical center.\n" +
-                "      The AMU has 4 faculties, 3 institutes and 16 departments.");
-
-    }
-
-
+public class Main {
     public static void main(String[] args) {
-        launch(args);
+        Game.main(args);
     }
 }
-
 ```  
-* sample.fxml
+* Runner.java
 ```java
-<?xml version="1.0" encoding="UTF-8"?>
+package com.example.runnerio;
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="406.0" style="-fx-background-color: #222222;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <children>
-      <Button fx:id="playButton" layoutY="54.0" mnemonicParsing="false" onAction="#playMedia" prefHeight="51.0" prefWidth="56.0" text="▶" wrapText="true">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Button>
-      <Label fx:id="songLabel" alignment="CENTER" layoutY="-2.0" prefHeight="0.0" prefWidth="406.0" text="𝅙" textFill="#f0dfdf">
-         <font>
-            <Font size="39.0" />
-         </font>
-      </Label>
-      <Button fx:id="pauseButton" layoutX="56.0" layoutY="54.0" mnemonicParsing="false" onAction="#pauseMedia" prefHeight="51.0" prefWidth="56.0" text="〓">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Button>
-      <Button fx:id="resetButton" layoutX="112.0" layoutY="54.0" mnemonicParsing="false" onAction="#resetMedia" prefHeight="51.0" prefWidth="56.0" text="⏏">
-         <font>
-            <Font size="22.0" />
-         </font>
-      </Button>
-      
-      <Button fx:id="PreviousButton" layoutX="168.0" layoutY="54.0" mnemonicParsing="false" onAction="#previousMedia" prefHeight="51.0" prefWidth="56.0" text="►">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Button>
-      <Button fx:id="nextButton" layoutX="224.0" layoutY="54.0" mnemonicParsing="false" onAction="#nextMedia" prefHeight="51.0" prefWidth="56.0" text="◄">
-         <font>
-            <Font size="24.0" />
-         </font>https://itsabdiev.github.io/Everest/
-      </Button>
-      <Slider fx:id="volumeSlider" layoutX="300.0" layoutY="72.0" max="200.0" prefHeight="9.0" prefWidth="81.0" value="100.0" />
-   </children>
-</AnchorPane>
 
+
+public class Runner {
+    int initialPosX;
+    int initialPosY;
+    Image image;
+    ImageView imageView;
+
+    Runner(int initialPosX, int initialPosY, Image image){
+        this.initialPosX = initialPosX;
+        this.initialPosY = initialPosY;
+        this.image = image;
+
+    }
+    void drawRunner(Group tv){
+        imageView = new ImageView(this.image);
+        imageView.setX(this.initialPosX);
+        imageView.setY(this.initialPosY);
+
+        tv.getChildren().add(imageView);
+    }
+    void frameChange(Image image){
+        imageView.setImage(image);
+    }
+    void running(int speed){
+        int currentX = (int)imageView.getX();
+        currentX+=speed;
+        imageView.setX(currentX);
+    }
+
+}
+
+```
+* Monster.java
+```java
+package com.example.runnerio;
+
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
+import java.util.Random;
+
+public class Monster extends Runner{
+    Monster(int initialPosX, int initialPosY, Image image) {
+           super(initialPosX, initialPosY, image);
+
+    }
+    void drawMonster(Group root){
+        imageView = new ImageView(this.image);
+        imageView.setX(this.initialPosX);
+        imageView.setY(this.initialPosY);
+        imageView.setScaleX(0.6);
+        imageView.setScaleY(0.6);
+        imageView.setRotationAxis(Rotate.Y_AXIS);
+        imageView.setRotate(180);
+        root.getChildren().add(imageView);
+    }
+
+    @Override
+    void running(int speed){
+        int currentX = (int)imageView.getX();
+        currentX-=speed;
+        imageView.setX(currentX);
+    }
+
+    void checkPos() {
+        if (imageView.getX() < 0) {
+            Random random = new Random();
+            int p = random.nextInt(650, 750);
+            imageView.setX(p);
+        }
+    }
+
+
+}
 ```
 
 [website]: https://itsabdiev.github.io/Everest/
